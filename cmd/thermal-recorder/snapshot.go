@@ -27,8 +27,6 @@ import (
 	"path"
 	"sync"
 	"time"
-
-	"github.com/TheCacophonyProject/lepton3"
 )
 
 const (
@@ -57,7 +55,7 @@ func newSnapshot(dir string) error {
 	if f == nil {
 		return errors.New("no frames yet")
 	}
-	g16 := image.NewGray16(image.Rect(0, 0, lepton3.FrameCols, lepton3.FrameRows))
+	g16 := image.NewGray16(image.Rect(0, 0, len(f.Pix[0]), len(f.Pix)))
 	// Max and min are needed for normalization of the frame
 	var valMax uint16
 	var valMin uint16 = math.MaxUint16

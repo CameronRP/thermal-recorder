@@ -206,14 +206,15 @@ func handleConn(conn net.Conn, conf *Config) error {
 }
 
 func frameParser(brand, model string) func([]byte, *cptvframe.Frame) error {
-	if brand != "flir" {
-		return nil
-	}
-	switch model {
-	case lepton3.Model, lepton3.Model35:
-		return lepton3.ParseRawFrame
-	case "boson":
-		return convertRawBosonFrame
+	if brand == "flir" {
+		switch model {
+		case lepton3.Model, lepton3.Model35:
+			return lepton3.ParseRawFrame
+		case "boson":
+			return convertRawBosonFrame
+		}
+	} else if brand == "Melexis" && model == "MLX90640" {
+		return convertRawMLX90640Frame
 	}
 	return nil
 }
