@@ -19,7 +19,7 @@ func convertRawMLX90640Frame(raw []byte, out *cptvframe.Frame) error {
 	i := 0
 	for y, row := range out.Pix {
 		for x := range row {
-			out.Pix[y][x] = binary.LittleEndian.Uint16(raw[i : i+2])
+			out.Pix[y][x] = binary.BigEndian.Uint16(raw[i : i+2])
 			i += 2
 		}
 	}
