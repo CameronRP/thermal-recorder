@@ -23,7 +23,9 @@ import (
 	"log"
 	"net"
 	"os"
+	"time"
 
+	"github.com/TheCacophonyProject/event-reporter/eventclient"
 	"github.com/TheCacophonyProject/go-cptv/cptvframe"
 	"github.com/TheCacophonyProject/lepton3"
 	arg "github.com/alexflint/go-arg"
@@ -31,6 +33,7 @@ import (
 
 	config "github.com/TheCacophonyProject/go-config"
 	"github.com/TheCacophonyProject/thermal-recorder/headers"
+	"github.com/TheCacophonyProject/thermal-recorder/leptondController"
 	"github.com/TheCacophonyProject/thermal-recorder/motion"
 	"github.com/TheCacophonyProject/thermal-recorder/recorder"
 	"github.com/TheCacophonyProject/thermal-recorder/throttle"
@@ -138,6 +141,7 @@ func runMain() error {
 }
 
 func handleConn(conn net.Conn, conf *Config) error {
+	leptondController.SetAutoFFC(true)
 	totalFrames := 0
 	reader := bufio.NewReader(conn)
 	header, err := headers.ReadHeaderInfo(reader)
@@ -201,7 +205,17 @@ func handleConn(conn net.Conn, conf *Config) error {
 			log.Printf("%d frames for this connection", totalFrames)
 		}
 
-		processor.Process(rawFrame)
+		err = processor.Process(rawFrame)
+		if _, isBadFrame := err.(*lepton3.BadFrameErr); isBadFrame {
+			event := eventclient.Event{
+				Timestamp: time.Now(),
+				Type:      "bad-thermal-frame",
+				Details:   map[string]interface{}{"description": map[string]interface{}{"details": err.Error()}},
+			}
+			eventclient.AddEvent(event)
+			// this will cause camera power to be cycled
+			return err
+		}
 	}
 }
 
