@@ -8,7 +8,7 @@ import (
 	"github.com/TheCacophonyProject/go-cptv/cptvframe"
 )
 
-func convertRawMLX90640Frame(raw []byte, out *cptvframe.Frame) error {
+func convertRawMLX90640Frame(raw []byte, out *cptvframe.Frame, edgePixels int) error {
 	log.Println("1")
 	// TODO populate telemetry
 	out.Status = cptvframe.Telemetry{

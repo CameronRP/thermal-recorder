@@ -197,7 +197,6 @@ func handleConn(conn net.Conn, conf *Config) error {
 		if err != nil {
 			return err
 		}
-		message = string(rawFrame[:5])
 		totalFrames++
 
 		if totalFrames%frameLogIntervalFirstMin == 0 &&
@@ -219,7 +218,7 @@ func handleConn(conn net.Conn, conf *Config) error {
 	}
 }
 
-func frameParser(brand, model string) func([]byte, *cptvframe.Frame) error {
+func frameParser(brand, model string) func([]byte, *cptvframe.Frame, int) error {
 	if brand == "flir" {
 		switch model {
 		case lepton3.Model, lepton3.Model35:

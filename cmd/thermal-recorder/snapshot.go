@@ -49,7 +49,7 @@ func newSnapshot(dir string) error {
 	}
 
 	if processor == nil {
-		return errors.New("Reading from camera has not started yet.")
+		return errors.New("reading from camera has not started yet")
 	}
 	f := processor.GetRecentFrame()
 	if f == nil {

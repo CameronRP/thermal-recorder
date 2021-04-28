@@ -76,9 +76,9 @@ type CPTVFileRecorder struct {
 func (cfr *CPTVFileRecorder) CheckCanRecord() error {
 	enoughSpace, err := checkDiskSpace(cfr.minDiskSpace, cfr.outputDir)
 	if err != nil {
-		return fmt.Errorf("Problem with checking disk space: %v", err)
+		return fmt.Errorf("problem with checking disk space: %v", err)
 	} else if !enoughSpace {
-		return errors.New("Motion detected but not enough free disk space to start recording")
+		return errors.New("motion detected but not enough free disk space to start recording")
 	}
 	return nil
 }
