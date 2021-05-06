@@ -204,8 +204,7 @@ func uint16Min(a, b uint16) uint16 {
 }
 
 func (mp *MotionProcessor) process(frame *cptvframe.Frame) {
-	//if mp.motionDetector.Detect(frame) {
-	if mlxDetect(frame) {
+	if mp.motionDetector.Detect(frame) {
 		if mp.listener != nil {
 			mp.listener.MotionDetected()
 		}
